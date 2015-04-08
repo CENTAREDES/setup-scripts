@@ -1,0 +1,54 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          geoserver 2.6.2
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start and stop geoserver
+# Description:       Enable geoserver service provided by daemon. 
+### END INIT INFO
+
+# Author: Adasa
+ECHO="/bin/echo -n"
+DESC="tomcat 7.0.59 - geoserver 2.6.2"
+export JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64/" 
+export GEOSERVER_HOME="/opt/geoserver/geoserver-2.6.2/" 
+export GEOSERVER_DATA_DIR="/opt/geoserver/catalog/data_dir/" 
+export CATALINA_HOME="/opt/tomcat/apache-tomcat-7.0.59"
+export CATALINA_OPTS=" -DGEOSERVER_DATA_DIR=$GEOSERVER_DATA_DIR "
+export JAVA_OPTS="$CATALINA_OPTS"
+STARTUP="$CATALINA_HOME/bin/startup.sh"
+SHUTDOWN="$CATALINA_HOME/bin/shutdown.sh"
+
+RUN="sudo -u tomcat sh"
+
+start() {
+    $ECHO -n "Arrancando $DESC"
+    $RUN $STARTUP
+    $ECHO "."
+}
+ 
+stop() {
+    $ECHO -n "Parando $DESC"
+    $RUN $SHUTDOWN 
+    $ECHO "."
+}
+ 
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    restart)
+        stop
+        sleep 30
+        start
+        ;;
+    *)
+        $ECHO "Uso: $0 {start|stop|restart}"
+        exit 1
+esac
+exit 0
